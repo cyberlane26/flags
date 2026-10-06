@@ -1,0 +1,39 @@
+undefined8 check_flag(byte *param_1, int param_2) {
+    ushort uVar1;
+    byte bVar2;
+    int local_2c;
+    ushort local_12;
+    
+    // The expected output bytes
+    byte local_target [29] = {
+        0xeb, 0xce, 0xda, 0xef, 0x50, 0x15, 0x81, 0x20, 0x1f, 0x2f, 
+        0xb0, 0x2d, 0x08, 0x2d, 0x17, 0x4e, 0xa8, 0x8f, 0xa6, 0x52, 
+        0x8b, 0x05, 0xa5, 0x7d, 0xcc, 0x4a, 0x9a, 0x90, 0xd9
+    };
+
+    // Flag must be exactly 29 characters long
+    if (param_2 != 29) {
+        return 0;
+    }
+    
+    local_12 = 0x1337;
+    local_2c = 0;
+    
+    while (local_2c < 29) {
+        // Shift and rotate
+        uVar1 = local_12 << 3 | local_12 >> 13;
+        local_12 = uVar1;
+        
+        bVar2 = param_1[local_2c] ^ (byte)local_12;
+        bVar2 = (bVar2 + (char)local_2c) * 3;
+        
+        if (bVar2 != local_target[local_2c]) {
+            return 0;
+        }
+        
+        // Update state with the user's input character
+        local_12 = local_12 ^ (ushort)param_1[local_2c];
+        local_2c = local_2c + 1;
+    }
+    return 1;
+}
